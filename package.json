@@ -2,7 +2,7 @@
   "name": "node-bootstrap-core",
   "title": "Core for node bootstrap",
   "description": "Core for node-bootstrap",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "licence": "MIT",
   "author": "Laurent Toussaint <lt.laurent.toussaint@gmail.com>",
   "repository": {
