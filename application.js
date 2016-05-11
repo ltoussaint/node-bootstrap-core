@@ -105,8 +105,7 @@ function CoreApplication() {
   function dispatch(request, response) {
     return Promise.resolve()
       .then(resolveRouters.bind(this, request))
-      .then(callAction.bind(this, request, response))
-      .catch(this.onPageNotFound.bind(this, request, response));
+      .then(callAction.bind(this, request, response));
   }
 
   /**
@@ -140,7 +139,12 @@ function CoreApplication() {
     try {
       var Action = require(ACTION_PATH + '/' + callback.action + '.js');
     } catch (error) {
-      return Promise.reject('Action ' + callback.action + ' does not exist.');
+      if (error.message == 'Cannot find module \'' + ACTION_PATH + '/' + callback.action + '.js\'') {
+        return Promise.reject('Action ' + callback.action + ' does not exist.')
+          .catch(this.onPageNotFound.bind(this, request, response));
+      }
+      return Promise.reject(error)
+        .catch(this.onError.bind(this, request, response));
     }
 
     var instance = new Action(request, response);
@@ -167,7 +171,6 @@ function CoreApplication() {
     }
 
     promise = promise.catch(this.onError.bind(this, request, response));
-
 
     return promise;
   }
